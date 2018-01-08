@@ -43,8 +43,13 @@ def prettyPrint(counter):
     for entry in c:
         print str(entry[1]) + " - " + entry[0]
 
-def search(query, guildId, session):
-    maxToSearch = 200
+def searchContent(query, guildId, session, maxToSearch = 200):
+  return search("content={}".format(query), guildId, session, maxToSearch)
+
+def searchByAuthor(authorId, guildId, session, maxToSearch = 1):
+  return search("author_id={}".format(authorId), guildId, session, maxToSearch)
+
+def search(query, guildId, session, maxToSearch = 200):
     offset = 0
     results = 0
     messageCounter = Counter()
@@ -54,7 +59,7 @@ def search(query, guildId, session):
         sys.stdout.flush()
 
         time.sleep(0.8)
-        url = 'https://discordapp.com/api/v6/guilds/{}/messages/search?content={}&offset={}'.format(guildId, query, offset)
+        url = 'https://discordapp.com/api/v6/guilds/{}/messages/search?{}&offset={}'.format(guildId, query, offset)
         response = session.get(url)
         responseJson = json.loads(response.text)
 
@@ -87,7 +92,7 @@ def main():
     queries = sys.argv[4:]
     results = []
     for q in queries:
-        results.append([q] + search(q, int(sys.argv[1]), s))
+        results.append([q] + searchByContent(q, int(sys.argv[1]), s))
 
     outfile = sys.argv[3]
 
