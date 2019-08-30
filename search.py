@@ -43,6 +43,9 @@ def prettyPrint(counter):
     for entry in c:
         print str(entry[1]) + " - " + entry[0]
 
+def getMembers(guildId, session, limit = 1000):
+  return session.get('https://discordapp.com/api/v6/guilds/{}/members?limit={}'.format(guildId, limit)).json()
+
 def searchContent(query, guildId, session, maxToSearch = 200):
   return search("content={}".format(query), guildId, session, maxToSearch)
 
